@@ -8,6 +8,7 @@ Requires a config file like:
 [default]
 url=https://redmine.yourorg.tld
 key=7c6cnotarealkey2b198c24449cca20b61c95854
+```
 
 Uses [pyredmine](https://github.com/ianepperson/pyredminews)
 
