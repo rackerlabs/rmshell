@@ -15,8 +15,10 @@ Uses [pyredmine](https://github.com/ianepperson/pyredminews)
 INSTALLATION
 ============
 
-python setup.py build
-python setup.py install
+```
+$ python setup.py build
+$ python setup.py install
+```
 
 USAGE
 =====
@@ -44,5 +46,7 @@ CONTRIBUTING
 ============
 
 License is Apache 2.0.
+
 Pull requests welcome.
+
 Find me in #rackspace-dev on Freenode as jlk
