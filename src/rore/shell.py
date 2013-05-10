@@ -21,7 +21,7 @@ import ConfigParser
 import redmine
 
 # Setup the basic logging objects
-log = logging.getLogger('rmshell')
+log = logging.getLogger('rore')
 
 
 def get_user(rmine, username):
@@ -95,11 +95,11 @@ def issues(args, rmine):
 def cmd():
     """This is the entry point for the shell command"""
 
-    parser = argparse.ArgumentParser(prog='rmshell')
+    parser = argparse.ArgumentParser(prog='rore')
     # config
     parser.add_argument('--config', '-C', default=None,
                         help='Specify a config file to use '
-                        '(defaults to ~/.rmshell)')
+                        '(defaults to ~/.rore)')
     parser.add_argument('--site', '-S', default='default',
                         help='Specify which site to use '
                         '(defaults to default)')
@@ -172,7 +172,7 @@ def cmd():
 
     # load the credentials
     if not args.config:
-        args.config = '~/.rmshell'
+        args.config = '~/.rore'
     configfile = os.path.expanduser(args.config)
     cparser = ConfigParser.SafeConfigParser()
     cparser.readfp(open(configfile, 'r'))

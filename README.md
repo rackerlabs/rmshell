@@ -1,4 +1,4 @@
-rmshell
+rore
 =======
 
 A command line tool for working with Redmine
@@ -24,10 +24,10 @@ USAGE
 =====
 
 ```
-$ rmshell isues --query
+$ rore isues --query
 ```
 ```
-$ rmshell issues --create --project deploy --subject 'Deploy broken!'
+$ rore issues --create --project deploy --subject 'Deploy broken!'
 ```
 
 DOCUMENTATION
@@ -36,10 +36,10 @@ DOCUMENTATION
 
 Nothing exists right now except for the help output.
 ```
-$ rmshell --help
+$ rore --help
 ```
 ```
-$ rmshell issues --help
+$ rore issues --help
 ```
 
 CONTRIBUTING
