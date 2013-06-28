@@ -39,6 +39,7 @@ def print_issue(rmine, issue, verbose=False):
     print('%s ( %s )' % (issue.id, '%s/issues/%s' % (rmine._url,
                                                      issue.id)))
     print('subject:     %s' % issue.subject)
+    print('type:        %s' % issue.tracker.name)
     try:
         print('assigned to: %s' % issue.assigned_to.name)
     except AttributeError:
@@ -53,7 +54,14 @@ def print_issue(rmine, issue, verbose=False):
         try:
             print('due date:    %s' % issue.due_date)
         except AttributeError:
-            print('due date:     -')
+            pass
+        try:
+            print('parent:      %s' % issue.parent.id)
+        except AttributeError:
+            pass
+        print('updated_on:  %s' % issue.updated_on)
+        print('description:\n')
+        print(issue.description)
     print('\n')
 
 
