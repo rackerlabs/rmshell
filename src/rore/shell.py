@@ -50,6 +50,12 @@ def print_issue(rmine, issue):
 def issues(args, rmine):
     """Handle issues"""
 
+    # Just print issue details
+    if args.ID:
+        ishs = [rmine.issues[ID] for ID in args.ID]
+        for ish in ishs:
+            print_issue(rmine, ish)
+
     # query
     if args.query:
         qdict = {}
@@ -141,6 +147,10 @@ def cmd():
                                'a new issue')
     issues_parser.add_argument('--description', help='Set description when '
                                'creating a new issue')
+
+    # Lastly just feed specific issue numbers in
+    issues_parser.add_argument('ID', help='Issue IDs to find', nargs='*')
+
     # assign the function
     issues_parser.set_defaults(command=issues)
 
