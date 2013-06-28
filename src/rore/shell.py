@@ -69,7 +69,7 @@ def issues(args, rmine):
     """Handle issues"""
 
     # Just print issue details
-    if args.ID:
+    if args.ID and not (args.update or args.close or args.resolve):
         ishs = [rmine.issues[ID] for ID in args.ID]
         for ish in ishs:
             print_issue(rmine, ish, args.verbose)
@@ -115,6 +115,22 @@ def issues(args, rmine):
         # Print it out
         print_issue(rmine, issue, args.verbose)
 
+    # resolve the ticket(s)
+    if args.resolve:
+        ishs = [rmine.issues[ID] for ID in args.ID]
+        for ish in ishs:
+            ish.resolve(notes=args.notes)
+            print_issue(rmine, ish, args.verbose)
+        return
+
+    # close the ticket(s)
+    if args.close:
+        ishs = [rmine.issues[ID] for ID in args.ID]
+        for ish in ishs:
+            ish.close(notes=args.notes)
+            print_issue(rmine, ish, args.verbose)
+        return
+
 
 def cmd():
     """This is the entry point for the shell command"""
@@ -146,6 +162,10 @@ def cmd():
                                help='Query for tickets')
     issues_parser.add_argument('--create', action='store_true',
                                help='Create a new ticket')
+    issues_parser.add_argument('--resolve', action='store_true',
+                               help='Resolve a ticket')
+    issues_parser.add_argument('--close', action='store_true',
+                               help='Close a ticket')
     issues_parser.add_argument('--update', action='store_true',
                                help='Update an existing ticket')
     # details
@@ -165,6 +185,8 @@ def cmd():
                                'a new issue')
     issues_parser.add_argument('--description', help='Set description when '
                                'creating a new issue')
+    issues_parser.add_argument('--notes', help='Notes to use when resolving '
+                               'or closing an issue')
 
     # More options when showing issues
     issues_parser.add_argument('--verbose', action='store_true',
