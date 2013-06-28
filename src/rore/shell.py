@@ -64,6 +64,19 @@ def print_issue(rmine, issue, verbose=False):
         print(issue.description)
     print('\n')
 
+def print_project(rmine, proj, verbose=False):
+    """Print out a redmine project object."""
+
+    print('%s ( %s )' % (proj.name, '%s/projects/%s' % (rmine._url,
+                                                        proj.identifier)))
+    if verbose:
+        # Here is where we should enumerate all the possible fields
+        print('description: %s' % proj.description)
+        try:
+            print('parent: %s' % proj.parent.name)
+        except AttributeError:
+            pass
+    print('\n')
 
 def issues(args, rmine):
     """Handle issues"""
@@ -130,6 +143,13 @@ def issues(args, rmine):
             ish.close(notes=args.notes)
             print_issue(rmine, ish, args.verbose)
         return
+    
+def projects(args, rmine):
+    """Handle projects"""
+
+    if args.list:
+        for proj in rmine.projects:
+            print_project(rmine, proj, args.verbose)
 
 
 def cmd():
@@ -198,6 +218,20 @@ def cmd():
 
     # assign the function
     issues_parser.set_defaults(command=issues)
+
+    # Projects@
+    project_parser = subparsers.add_parser('projects',
+                                           help='Interact with projects')
+    # verbs
+    project_parser.add_argument('--list', action='store_true',
+                                help='List out all the projects')
+
+    # details
+    project_parser.add_argument('--verbose', action='store_true',
+                                help='Show more of the project details',
+                                default=False)
+    # assign the function
+    project_parser.set_defaults(command=projects)
 
     args = parser.parse_args()
     # Setup logging
