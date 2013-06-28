@@ -33,7 +33,7 @@ def get_user(rmine, username):
     return users[0].id
 
 
-def print_issue(rmine, issue):
+def print_issue(rmine, issue, verbose=False):
     """Print out a redmine issue object."""
 
     print('%s ( %s )' % (issue.id, '%s/issues/%s' % (rmine._url,
@@ -44,7 +44,17 @@ def print_issue(rmine, issue):
     except AttributeError:
         print('assigned to: UNASSIGNED')
     print('project:     %s' % issue.project.name)
-    print('status:      %s\n' % issue.status)
+    print('status:      %s' % issue.status)
+    print('completion:  %s' % issue.done_ratio)
+    if verbose:
+        # Here is where we should enumerate all the possible fields
+        print('priority:    %s' % issue.priority)
+        print('start date:  %s' % issue.start_date)
+        try:
+            print('due date:    %s' % issue.due_date)
+        except AttributeError:
+            print('due date:     -')
+    print('\n')
 
 
 def issues(args, rmine):
@@ -54,7 +64,7 @@ def issues(args, rmine):
     if args.ID:
         ishs = [rmine.issues[ID] for ID in args.ID]
         for ish in ishs:
-            print_issue(rmine, ish)
+            print_issue(rmine, ish, args.verbose)
 
     # query
     if args.query:
@@ -72,7 +82,7 @@ def issues(args, rmine):
         issues = rmine.issues.query_to_list(**qdict)
         # This output is kinda lame, but functional for now
         for issue in issues:
-            print_issue(rmine, issue)
+            print_issue(rmine, issue, args.verbose)
 
     # create
     if args.create:
@@ -95,7 +105,7 @@ def issues(args, rmine):
         # Create the issue
         issue = rmine.issues.new(**idict)
         # Print it out
-        print_issue(rmine, issue)
+        print_issue(rmine, issue, args.verbose)
 
 
 def cmd():
@@ -147,6 +157,11 @@ def cmd():
                                'a new issue')
     issues_parser.add_argument('--description', help='Set description when '
                                'creating a new issue')
+
+    # More options when showing issues
+    issues_parser.add_argument('--verbose', action='store_true',
+                               help='Show more of the ticket details',
+                               default=False)
 
     # Lastly just feed specific issue numbers in
     issues_parser.add_argument('ID', help='Issue IDs to find', nargs='*')
