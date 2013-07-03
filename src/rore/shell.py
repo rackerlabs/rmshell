@@ -133,6 +133,7 @@ def issues(args, rmine):
         ishs = [rmine.issues[ID] for ID in args.ID]
         for ish in ishs:
             ish.resolve(notes=args.notes)
+            ish.refresh()
             print_issue(rmine, ish, args.verbose)
         return
 
@@ -141,6 +142,7 @@ def issues(args, rmine):
         ishs = [rmine.issues[ID] for ID in args.ID]
         for ish in ishs:
             ish.close(notes=args.notes)
+            ish.refresh()
             print_issue(rmine, ish, args.verbose)
         return
     
