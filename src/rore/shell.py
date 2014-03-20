@@ -203,7 +203,25 @@ def issues(args, rmine):
             ish.refresh()
             print_issue(rmine, ish, args.verbose)
         return
-    
+
+    # issue types
+    if args.list_types:
+        if args.project:
+            # Get trackers via the project entry point
+            proj = rmine.project.get(args.project, include='trackers')
+            print('Available issue types for %s :' % proj.url)
+            print('\n'.join(itype.name for itype in proj.trackers))
+        else:
+            print('Available issue types for %s :' % rmine.url)
+            print('\n'.join(itype.name for itype in rmine.tracker.all()))
+        return
+
+    # issue types
+    if args.list_statuses:
+        print('Available issue statuses for %s :' % rmine.url)
+        print('\n'.join(status.name for status in rmine.issue_status.all()))
+    return
+
 def projects(args, rmine):
     """Handle projects"""
 
@@ -248,6 +266,12 @@ def cmd():
                                help='Close a ticket')
     issues_parser.add_argument('--update', action='store_true',
                                help='Update an existing ticket')
+    issues_parser.add_argument('--list-types', action='store_true',
+                               help='List available issue types. Specify a'
+                               'project ID to get specific types for that'
+                               'project')
+    issues_parser.add_argument('--list-statuses', action='store_true',
+                               help='List available statuses.')
     # details
     issues_parser.add_argument('--project', help='Filter by or assign to '
                                'project')
