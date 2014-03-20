@@ -85,6 +85,7 @@ def print_project(rmine, proj, verbose=False):
     if verbose:
         # Here is where we should enumerate all the possible fields
         print('description: %s' % proj.description)
+        print('identifier: %s' % proj.identifier)
         try:
             print('parent: %s' % proj.parent['name'])
         except ResourceAttrError:
