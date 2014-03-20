@@ -8,7 +8,7 @@ except ImportError:
 
 setup(
     name='rore',
-    version='0.1',
+    version='0.2',
     description='A command line utility for Redmine',
     author='Jesse Keating',
     author_email='jesse.keating@rackspace.com',
@@ -20,5 +20,5 @@ setup(
     zip_safe=False,
     entry_points={
         'console_scripts': ['rore= rore.shell:cmd', ]},
-    install_requires=['python-redmine', ],
+    install_requires=['python-redmine>=0.7.2', ],
 )
