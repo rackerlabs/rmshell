@@ -133,7 +133,7 @@ def issues(args, rmine):
         itype = [tracker.id for tracker in rmine.tracker.all() if
                 tracker.name == args.type]
         try:
-            idict['tracker'] = itype[0]
+            idict['tracker_id'] = itype[0]
         except IndexError:
             raise RuntimeError('Unknown issue type %s' % args.type)
         # We have to have these items to continue
