@@ -188,7 +188,7 @@ def issues(args, rmine):
 
         for ish in ishs:
             rmine.issue.update(ish.id, **udict)
-            ish.refresh()
+            ish = ish.refresh()
             print_issue(rmine, ish, args.verbose)
         return
 
@@ -200,7 +200,7 @@ def issues(args, rmine):
         for ish in ishs:
             rmine.issue.update(ish.id, status_id=closestatus[0].id,
                                notes=args.notes)
-            ish.refresh()
+            ish = ish.refresh()
             print_issue(rmine, ish, args.verbose)
         return
 
