@@ -62,6 +62,19 @@ def print_issue(rmine, issue, verbose=False):
         print('updated_on:  %s' % issue.updated_on)
         print('description:\n')
         print(issue.description)
+        print('----')
+        for relation in issue.relations:
+            relish = rmine.issue.get(relation.issue_to_id)
+            print('%s %s - %s #%s: %s') % (relation.relation_type,
+                                           relish.project.name,
+                                           relish.tracker.name,
+                                           relish.id,
+                                           relish.subject)
+        for journ in issue.journals:
+            print('\n####')
+            print('Updated by %s on %s:' % (journ.user.name,
+                                            journ.created_on))
+            print(journ.notes)
     print('\n')
 
 def print_project(rmine, proj, verbose=False):
