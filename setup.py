@@ -20,5 +20,5 @@ setup(
     zip_safe=False,
     entry_points={
         'console_scripts': ['rore= rore.shell:cmd', ]},
-    requires=['pyredmine', ],
+    install_requires=['python-redmine', ],
 )
