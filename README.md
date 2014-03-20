@@ -10,7 +10,7 @@ url=https://redmine.yourorg.tld
 key=7c6cnotarealkey2b198c24449cca20b61c95854
 ```
 
-Uses [pyredmine](https://github.com/ianepperson/pyredminews)
+Uses [python-redmine](https://github.com/maxtepkeev/python-redmine)
 
 INSTALLATION
 ============
@@ -28,6 +28,9 @@ $ rore isues --query
 ```
 ```
 $ rore issues --create --project deploy --subject 'Deploy broken!'
+```
+```
+$ rore projects --list
 ```
 
 DOCUMENTATION
