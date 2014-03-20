@@ -152,6 +152,39 @@ def issues(args, rmine):
         issue = rmine.issue.create(**idict)
         # Print it out
         print_issue(rmine, issue, args.verbose)
+        return
+
+    # update the ticket(s)
+    if args.update:
+        ishs = [rmine.issue.get(ID) for ID in args.ID]
+        udict = {}
+        # Discover status ID
+        if args.status:
+            stat = [status for status in rmine.issue_status.all() if
+                    status.name == args.status]
+            try:
+                udict['status_id'] = stat[0].id
+            except IndexError:
+                raise RuntimeError('Unknown issue status %s' % args.status)
+
+        if args.type:
+            itype = [tracker for tracker in rmine.tracker.all() if
+                    tracker.name == args.type]
+            try:
+                udict['tracker_id'] = itype[0].id
+            except IndexError:
+                raise RuntimeError('Unknown issue type %s' % args.type)
+
+        if args.assigned_to:
+            udict['assigned_to_id'] = args.assigned_to
+        if args.project:
+            udict['project_id'] = args.project
+        if args.subject:
+            udict['subject'] = args.subject
+        if args.description:
+            udict['description'] = args.description
+        if args.notes:
+            udict['notes'] = args.notes
 
         for ish in ishs:
             rmine.issue.update(ish.id, **udict)
@@ -218,6 +251,8 @@ def cmd():
     # details
     issues_parser.add_argument('--project', help='Filter by or assign to '
                                'project')
+    issues_parser.add_argument('--type', help='Filter by or create issue '
+                               'type.  Defaults to Bug.')
     # I don't like the asterisk here, change it to something else soon
     issues_parser.add_argument('--nosubs', help='Filter out issues from sub '
                                'projects', action='store_true')
