@@ -117,10 +117,7 @@ def issues(args, rmine):
         issues = rmine.issue.filter(**qdict)
         # This output is kinda lame, but functional for now
         for issue in issues:
-            # Work around filter issue having incomplete url data
-            # https://github.com/maxtepkeev/python-redmine/issues/19
-            pish = rmine.issue.get(issue.id)
-            print_issue(rmine, pish, args.verbose)
+            print_issue(rmine, issue, args.verbose)
             print('##############')
         return
 
