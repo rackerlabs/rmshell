@@ -16,6 +16,10 @@ INSTALLATION
 ============
 
 ```
+$ pip install rore
+```
+Or to install directly from checkout:
+```
 $ python setup.py build
 $ python setup.py install
 ```
