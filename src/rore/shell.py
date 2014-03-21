@@ -145,6 +145,14 @@ def issues(args, rmine):
         # Would be rad to do a git commit like editor pop up here
         if args.description:
             idict['description'] = args.description
+        # figure out the status
+        if args.status:
+            stat = [status for status in rmine.issue_status.all() if
+                    status.name == args.status]
+            try:
+                idict['status_id'] = stat[0].id
+            except IndexError:
+                raise RuntimeError('Unknown issue type %s' % args.type)
         # Create the issue
         issue = rmine.issue.create(**idict)
         # Print it out
