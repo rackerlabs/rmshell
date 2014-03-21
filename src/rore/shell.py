@@ -124,6 +124,12 @@ def issues(args, rmine):
     # create
     if args.create:
         idict = {}
+        # We have to have these items to continue
+        if not args.project or not args.subject:
+            raise RuntimeError('project and subject must be defined')
+        idict['project_id'] = args.project
+        idict['subject'] = args.subject
+        # Figure out type
         if not args.type:
             args.type='Bug'
         # Get tracker by type
@@ -133,11 +139,6 @@ def issues(args, rmine):
             idict['tracker_id'] = itype[0]
         except IndexError:
             raise RuntimeError('Unknown issue type %s' % args.type)
-        # We have to have these items to continue
-        if not args.project or not args.subject:
-            raise RuntimeError('project and subject must be defined')
-        idict['project_id'] = args.project
-        idict['subject'] = args.subject
         # Figure out a way to discover if assigned_to is a int ID or if it needs
         # to be discovered from a name
         if args.assigned_to and args.assigned_to != 'UNASSIGNED':
