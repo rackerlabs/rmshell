@@ -25,12 +25,20 @@ from redmine.exceptions import *
 log = logging.getLogger('rore')
 
 
-def get_user(rmine, username):
-    """Get the user ID from the provided user name"""
+def get_user(rmine, userdata):
+    """Get the user ID from the provided data"""
 
-    users = rmine.user.filter(name=username)
+    # first see if we got an int
+    try:
+        userdata = int(userdata)
+        return userdata
+    except ValueError:
+        pass
+    users = rmine.user.filter(name=userdata)
     if not users:
-        raise RuntimeError('Unknown user %s' % username)
+        raise RuntimeError('Unknown user %s' % userdata)
+    if len(users) > 1:
+        raise RuntimeError('Multiple users for %s found' % userdata)
     return users[0].id
 
 
@@ -110,7 +118,7 @@ def issues(args, rmine):
         if args.nosubs:
             qdict['subproject_id'] = '!*'
         if args.assigned_to:
-            qdict['assigned_to_id'] = args.assigned_to
+            qdict['assigned_to_id'] = get_user(rmine, args.assigned_to)
         if args.status:
             qdict['status_id'] = args.status
         # Get the issues
@@ -139,10 +147,8 @@ def issues(args, rmine):
             idict['tracker_id'] = itype[0]
         except IndexError:
             raise RuntimeError('Unknown issue type %s' % args.type)
-        # Figure out a way to discover if assigned_to is a int ID or if it needs
-        # to be discovered from a name
         if args.assigned_to and args.assigned_to != 'UNASSIGNED':
-            idict['assigned_to_id'] = args.assigned_to
+            idict['assigned_to_id'] = get_user(rmine, args.assigned_to)
         # Would be rad to do a git commit like editor pop up here
         if args.description:
             idict['description'] = args.description
@@ -182,7 +188,7 @@ def issues(args, rmine):
                 raise RuntimeError('Unknown issue type %s' % args.type)
 
         if args.assigned_to:
-            udict['assigned_to_id'] = args.assigned_to
+            udict['assigned_to_id'] = get_user(rmine, args.assigned_to)
         if args.project:
             udict['project_id'] = args.project
         if args.subject:
