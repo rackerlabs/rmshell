@@ -1,7 +1,7 @@
-Ansible Changes By Release
+Rore Changes By Release
 ==========================
 
-## 0.4 - March 25, 2014
+## 0.5 - March 25, 2014
 
 - List available issue queries
 - Display tickets in oneline condensed format

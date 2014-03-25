@@ -8,7 +8,7 @@ except ImportError:
 
 setup(
     name='rore',
-    version='0.4',
+    version='0.5',
     description='A command line utility for Redmine',
     author='Jesse Keating',
     author_email='jesse.keating@rackspace.com',
