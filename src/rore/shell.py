@@ -91,6 +91,7 @@ def print_issue(rmine, issue, verbose=False, oneline=False):
             print(journ.notes)
     print('\n')
 
+
 def print_project(rmine, proj, verbose=False):
     """Print out a redmine project object."""
 
@@ -105,6 +106,7 @@ def print_project(rmine, proj, verbose=False):
         except ResourceAttrError:
             pass
     print('\n')
+
 
 def issues(args, rmine):
     """Handle issues"""
@@ -148,10 +150,11 @@ def issues(args, rmine):
         idict['subject'] = args.subject
         # Figure out type
         if not args.type:
-            args.type='Bug'
+            args.type = 'Bug'
         # Get tracker by type
-        itype = [tracker.id for tracker in rmine.tracker.all() if
-                tracker.name == args.type]
+        itype = [
+            tracker.id for tracker in rmine.tracker.all() if
+            tracker.name == args.type]
         try:
             idict['tracker_id'] = itype[0]
         except IndexError:
@@ -189,8 +192,9 @@ def issues(args, rmine):
                 raise RuntimeError('Unknown issue status %s' % args.status)
 
         if args.type:
-            itype = [tracker for tracker in rmine.tracker.all() if
-                    tracker.name == args.type]
+            itype = [
+                tracker for tracker in rmine.tracker.all()
+                if tracker.name == args.type]
             try:
                 udict['tracker_id'] = itype[0].id
             except IndexError:
@@ -249,6 +253,7 @@ def issues(args, rmine):
         print('\n'.join("%s %s" % (q.id, q.name) for q in
                         sorted(rmine.query.all(), key=lambda k: k['id'])))
         return
+
 
 def projects(args, rmine):
     """Handle projects"""
