@@ -121,6 +121,8 @@ def issues(args, rmine):
             qdict['assigned_to_id'] = get_user(rmine, args.assigned_to)
         if args.status:
             qdict['status_id'] = args.status
+        if args.query_id:
+            qdict['query_id'] = args.query_id
         # Get the issues
         issues = rmine.issue.filter(**qdict)
         # This output is kinda lame, but functional for now
@@ -304,6 +306,7 @@ def cmd():
                                'creating a new issue')
     issues_parser.add_argument('--notes', help='Notes to use when resolving '
                                'or closing an issue')
+    issues_parser.add_argument('--query_id', help='Filter by query ID')
 
     # More options when showing issues
     issues_parser.add_argument('--verbose', action='store_true',
