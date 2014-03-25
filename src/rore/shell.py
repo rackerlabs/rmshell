@@ -42,9 +42,15 @@ def get_user(rmine, userdata):
     return users[0].id
 
 
-def print_issue(rmine, issue, verbose=False):
+def print_issue(rmine, issue, verbose=False, oneline=False):
     """Print out a redmine issue object."""
 
+    # handle oneline printing
+    if oneline:
+        print('%s %s %s %s %s %s' % (issue.id, issue.project.name,
+                                     issue.tracker.name, issue.priority.name,
+                                     issue.status.name, issue.subject))
+        return
     print('%s ( %s )' % (issue.id, issue.url))
     print('subject:     %s' % issue.subject)
     print('type:        %s' % issue.tracker.name)
@@ -107,7 +113,7 @@ def issues(args, rmine):
     if args.ID and not (args.update or args.close):
         ishs = [rmine.issue.get(ID) for ID in args.ID]
         for ish in ishs:
-            print_issue(rmine, ish, args.verbose)
+            print_issue(rmine, ish, args.verbose, args.oneline)
         return
 
     # query
@@ -127,8 +133,9 @@ def issues(args, rmine):
         issues = rmine.issue.filter(**qdict)
         # This output is kinda lame, but functional for now
         for issue in issues:
-            print_issue(rmine, issue, args.verbose)
-            print('##############')
+            print_issue(rmine, issue, args.verbose, args.oneline)
+            if not args.oneline:
+                print('##############')
         return
 
     # create
@@ -165,7 +172,7 @@ def issues(args, rmine):
         # Create the issue
         issue = rmine.issue.create(**idict)
         # Print it out
-        print_issue(rmine, issue, args.verbose)
+        print_issue(rmine, issue, args.verbose, args.oneline)
         return
 
     # update the ticket(s)
@@ -203,7 +210,7 @@ def issues(args, rmine):
         for ish in ishs:
             rmine.issue.update(ish.id, **udict)
             ish = ish.refresh()
-            print_issue(rmine, ish, args.verbose)
+            print_issue(rmine, ish, args.verbose, args.oneline)
         return
 
     # close the ticket(s)
@@ -215,7 +222,7 @@ def issues(args, rmine):
             rmine.issue.update(ish.id, status_id=closestatus[0].id,
                                notes=args.notes)
             ish = ish.refresh()
-            print_issue(rmine, ish, args.verbose)
+            print_issue(rmine, ish, args.verbose, args.oneline)
         return
 
     # issue types
@@ -311,6 +318,9 @@ def cmd():
     # More options when showing issues
     issues_parser.add_argument('--verbose', action='store_true',
                                help='Show more of the ticket details',
+                               default=False)
+    issues_parser.add_argument('--oneline', action='store_true',
+                               help='Show each ticket on one line',
                                default=False)
 
     # Lastly just feed specific issue numbers in
