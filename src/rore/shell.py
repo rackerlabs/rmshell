@@ -241,7 +241,14 @@ def issues(args, rmine):
     if args.list_statuses:
         print('Available issue statuses for %s :' % rmine.url)
         print('\n'.join(status.name for status in rmine.issue_status.all()))
-    return
+        return
+
+    # issue queries
+    if args.list_queries:
+        print('Available issue queries for %s :' % rmine.url)
+        print('\n'.join("%s %s" % (q.id, q.name) for q in
+                        sorted(rmine.query.all(), key=lambda k: k['id'])))
+        return
 
 def projects(args, rmine):
     """Handle projects"""
@@ -291,6 +298,8 @@ def cmd():
                                help='List available issue types. Specify a'
                                'project ID to get specific types for that'
                                'project')
+    issues_parser.add_argument('--list-queries', action='store_true',
+                               help='List available issue queries')
     issues_parser.add_argument('--list-statuses', action='store_true',
                                help='List available statuses.')
     # details
