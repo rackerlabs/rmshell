@@ -30,7 +30,7 @@ USAGE
 =====
 
 ```
-$ rore isues --query
+$ rore issues --query
 ```
 ```
 $ rore issues --create --project deploy --subject 'Deploy broken!'
