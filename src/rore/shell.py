@@ -103,11 +103,12 @@ def print_issue(rmine, issue, verbose=False, oneline=False):
                     reltype = 'blocked by'
                 if relation.relation_type == 'blocked':
                     reltype = 'blocks'
-            print('%s %s - %s #%s: %s') % (reltype,
-                                           relish.project.name,
-                                           relish.tracker.name,
-                                           relish.id,
-                                           relish.subject)
+            print('%s %s - %s #%s: %s (%s)') % (reltype,
+                                                relish.project.name,
+                                                relish.tracker.name,
+                                                relish.id,
+                                                relish.subject,
+                                                relation.id)
         for journ in issue.journals:
             print('\n####')
             print('Updated by %s on %s:' % (journ.user.name,
@@ -297,6 +298,14 @@ def issues(args, rmine):
                         sorted(rmine.query.all(), key=lambda k: k['id'])))
         return
 
+    # delete a relation
+    if args.delete_relation:
+        relation = rmine.issue_relation.get(args.delete_relation)
+        rmine.issue_relation.delete(args.delete_relation)
+        print('Deleted relation %s: %s %s %s' % (relation.id,
+                                                 relation.issue_id,
+                                                 relation.relation_type,
+                                                 relation.issue_to_id))
 
 def projects(args, rmine):
     """Handle projects"""
@@ -350,6 +359,8 @@ def cmd():
                                help='List available issue queries')
     issues_parser.add_argument('--list-statuses', action='store_true',
                                help='List available statuses.')
+    issues_parser.add_argument('--delete_relation', help='Delete a relationship',
+                               type=int, metavar='RELATION_ID')
     # details
     issues_parser.add_argument('--project', help='Filter by or assign to '
                                'project')
@@ -378,7 +389,6 @@ def cmd():
                                choices=['relates', 'duplicates',
                                         'blocks', 'blocked',
                                         'precedes', 'follows'])
-
     # More options when showing issues
     issues_parser.add_argument('--verbose', action='store_true',
                                help='Show more of the ticket details',
