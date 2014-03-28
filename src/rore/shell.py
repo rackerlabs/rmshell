@@ -45,6 +45,10 @@ def get_user(rmine, userdata):
 def print_issue(rmine, issue, verbose=False, oneline=False):
     """Print out a redmine issue object."""
 
+    # handle unauth issues -- github #20
+    if issue.id == 0:
+        print('Unauthorized to view this issue')
+        return
     # handle oneline printing
     if oneline:
         print('%s %s %s %s %s %s' % (issue.id, issue.project.name,
@@ -89,6 +93,9 @@ def print_issue(rmine, issue, verbose=False, oneline=False):
                 relish = rmine.issue.get(relation.issue_id)
             else:
                 relish = rmine.issue.get(relation.issue_to_id)
+            # Check for unauth -- wtf? See github #20
+            if relish.id == 0:
+                continue
             # Get the verb right for blocking relationship
             reltype = relation.relation_type
             if relation.issue_id != issue.id:
