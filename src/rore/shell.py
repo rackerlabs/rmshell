@@ -74,8 +74,9 @@ def print_issue(rmine, issue, verbose=False, oneline=False):
         except ResourceAttrError:
             pass
         print('updated_on:  %s' % issue.updated_on)
-        print('description:\n')
-        print(issue.description)
+        if hasattr(issue, 'description'):
+            print('description:\n')
+            print(issue.description)
         print('----')
         for relation in issue.relations:
             relish = rmine.issue.get(relation.issue_to_id)
