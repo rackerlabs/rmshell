@@ -1,6 +1,9 @@
 Rore Changes By Release
 ==========================
 
+- issue relation creations at ticket create or update
+- Bugfixes on verbose issue prints
+
 ## 0.5 - March 25, 2014
 
 - List available issue queries
