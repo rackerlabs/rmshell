@@ -89,7 +89,8 @@ def print_issue(rmine, issue, verbose=False, oneline=False):
             print('\n####')
             print('Updated by %s on %s:' % (journ.user.name,
                                             journ.created_on))
-            print(journ.notes)
+            if hasattr(journ, 'notes'):
+                print(journ.notes)
     print('\n')
 
 
