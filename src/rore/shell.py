@@ -108,6 +108,13 @@ def print_project(rmine, proj, verbose=False):
             pass
     print('\n')
 
+def create_relation(rmine, issue, relissue, reltype):
+    """Creates a new issue relationship between two issues."""
+
+    rmine.issue_relation.create(issue_id=issue,
+                                issue_to_id=relissue,
+                                relation_type=reltype)
+
 
 def issues(args, rmine):
     """Handle issues"""
@@ -175,6 +182,11 @@ def issues(args, rmine):
                 raise RuntimeError('Unknown issue type %s' % args.type)
         # Create the issue
         issue = rmine.issue.create(**idict)
+        # Create a relationship if one was asked for
+        if args.relate_to:
+            create_relation(rmine, issue.id, args.relate_to,
+                            args.relation_type)
+            issue = issue.refresh()
         # Print it out
         print_issue(rmine, issue, args.verbose, args.oneline)
         return
@@ -329,6 +341,13 @@ def cmd():
     issues_parser.add_argument('--notes', help='Notes to use when resolving '
                                'or closing an issue')
     issues_parser.add_argument('--query_id', help='Filter by query ID')
+    issues_parser.add_argument('--relate_to', help='Create a relationship',
+                               type=int)
+    issues_parser.add_argument('--relation_type', help='Type of relationship '
+                               'to create',
+                               choices=['relates', 'duplicates',
+                                        'blocks', 'blocked',
+                                        'precedes', 'follows'])
 
     # More options when showing issues
     issues_parser.add_argument('--verbose', action='store_true',
