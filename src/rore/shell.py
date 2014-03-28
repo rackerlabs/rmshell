@@ -225,7 +225,13 @@ def issues(args, rmine):
             udict['notes'] = args.notes
 
         for ish in ishs:
-            rmine.issue.update(ish.id, **udict)
+            if udict:
+                rmine.issue.update(ish.id, **udict)
+            else:
+                rmine.issue.get(ish.id)
+            if args.relate_to:
+                create_relation(rmine, ish.id, args.relate_to,
+                                args.relation_type)
             ish = ish.refresh()
             print_issue(rmine, ish, args.verbose, args.oneline)
         return
