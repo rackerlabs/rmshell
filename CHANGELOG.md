@@ -1,6 +1,7 @@
 Rore Changes By Release
 ==========================
 
+- Issue relation deletion
 - Print the proper relation context
 - issue relation creations at ticket create or update
 - Bugfixes on verbose issue prints
