@@ -79,8 +79,24 @@ def print_issue(rmine, issue, verbose=False, oneline=False):
             print(issue.description)
         print('----')
         for relation in issue.relations:
-            relish = rmine.issue.get(relation.issue_to_id)
-            print('%s %s - %s #%s: %s') % (relation.relation_type,
+            # Get the verb right for blocking relationship
+            reltype = relation.relation_type
+            if relation.issue_id != issue.id:
+                if relation.relation_type == 'blocks':
+                    reltype = 'blocked by'
+                if relation.relation_type == 'blocked':
+                    reltype = 'blocks'
+                relish = rmine.issue.get(relation.issue_id)
+            else:
+                relish = rmine.issue.get(relation.issue_to_id)
+            # Get the verb right for blocking relationship
+            reltype = relation.relation_type
+            if relation.issue_id != issue.id:
+                if relation.relation_type == 'blocks':
+                    reltype = 'blocked by'
+                if relation.relation_type == 'blocked':
+                    reltype = 'blocks'
+            print('%s %s - %s #%s: %s') % (reltype,
                                            relish.project.name,
                                            relish.tracker.name,
                                            relish.id,
