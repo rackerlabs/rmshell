@@ -141,9 +141,9 @@ def issues(args, rmine):
         if args.query_id:
             qdict['query_id'] = args.query_id
         # Get the issues
-        issues = rmine.issue.filter(**qdict)
+        ishes = rmine.issue.filter(**qdict)
         # This output is kinda lame, but functional for now
-        for issue in issues:
+        for issue in ishes:
             print_issue(rmine, issue, args.verbose, args.oneline)
             if not args.oneline:
                 print('##############')
