@@ -103,6 +103,12 @@ def print_issue(rmine, issue, verbose=False, oneline=False):
                     reltype = 'blocked by'
                 if relation.relation_type == 'blocked':
                     reltype = 'blocks'
+                if relation.relation_type == 'duplicates':
+                    reltype = 'duplicated by'
+                if relation.relation_type == 'precedes':
+                    reltype = 'preceded by'
+                if relation.relation_type == 'follows':
+                    reltype = 'followed by'
             print('%s %s - %s #%s: %s (%s)') % (reltype,
                                                 relish.project.name,
                                                 relish.tracker.name,
