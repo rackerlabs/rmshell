@@ -454,7 +454,12 @@ def cmd():
         args.config = '~/.rore'
     configfile = os.path.expanduser(args.config)
     cparser = ConfigParser.SafeConfigParser()
-    cparser.readfp(open(configfile, 'r'))
+    try:
+        cparser.readfp(open(configfile, 'r'))
+    except IOError:
+        log.error("Couldn't find config file: %s" % configfile)
+        exit(1)
+
 
     siteurl = cparser.get(args.site, 'url')
     key = cparser.get(args.site, 'key')
