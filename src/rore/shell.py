@@ -20,7 +20,9 @@ import sys
 import os
 
 import redmine
+import tempfile
 from redmine import exceptions as rm_exc
+from subprocess import call
 
 
 # Setup the basic logging objects
@@ -141,6 +143,17 @@ def print_project(rmine, proj, verbose=False):
             pass
     print('\n')
 
+def editor_text(initial_description=""):
+    EDITOR = os.environ.get('EDITOR')
+    with tempfile.NamedTemporaryFile(suffix=".tmp", delete=False,
+                                     dir='/tmp/') as tmp:
+        tmp.write(initial_description)
+        tmp.flush()
+        call([EDITOR, tmp.name])
+    with open(tmp.name, 'r') as fh:
+        text = fh.read()
+    os.remove(tmp.name)
+    return text
 
 def create_relation(rmine, issue, relissue, reltype):
     """Creates a new issue relationship between two issues."""
@@ -206,6 +219,8 @@ def issues(args, rmine):
         # Would be rad to do a git commit like editor pop up here
         if args.description:
             idict['description'] = args.description
+        else:
+            idict['description'] = editor_text()
         # figure out the status
         if args.status:
             stat = [status for status in rmine.issue_status.all() if
