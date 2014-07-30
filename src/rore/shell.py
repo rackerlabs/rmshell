@@ -14,15 +14,17 @@
 #    under the License.
 
 import argparse
+import ConfigParser
 import logging
 import sys
 import os
-import ConfigParser
+
 import redmine
-from redmine.exceptions import *
+from redmine import exceptions as rm_exc
+
 
 # Setup the basic logging objects
-log = logging.getLogger('rore')
+LOG = logging.getLogger('rore')
 
 
 def get_user(rmine, userdata):
@@ -60,7 +62,7 @@ def print_issue(rmine, issue, verbose=False, oneline=False):
     print('type:        %s' % issue.tracker.name)
     try:
         print('assigned to: %s' % issue.assigned_to.name)
-    except ResourceAttrError:
+    except rm_exc.ResourceAttrError:
         print('assigned to: UNASSIGNED')
     print('project:     %s' % issue.project.name)
     print('status:      %s' % issue.status.name)
@@ -71,11 +73,11 @@ def print_issue(rmine, issue, verbose=False, oneline=False):
         print('start date:  %s' % issue.start_date)
         try:
             print('due date:    %s' % issue.due_date)
-        except ResourceAttrError:
+        except rm_exc.ResourceAttrError:
             pass
         try:
             print('parent:      %s' % issue.parent['id'])
-        except ResourceAttrError:
+        except rm_exc.ResourceAttrError:
             pass
         print('updated_on:  %s' % issue.updated_on)
         if hasattr(issue, 'description'):
@@ -135,9 +137,10 @@ def print_project(rmine, proj, verbose=False):
         print('identifier: %s' % proj.identifier)
         try:
             print('parent: %s' % proj.parent['name'])
-        except ResourceAttrError:
+        except rm_exc.ResourceAttrError:
             pass
     print('\n')
+
 
 def create_relation(rmine, issue, relissue, reltype):
     """Creates a new issue relationship between two issues."""
@@ -313,6 +316,7 @@ def issues(args, rmine):
                                                  relation.relation_type,
                                                  relation.issue_to_id))
 
+
 def projects(args, rmine):
     """Handle projects"""
 
@@ -365,7 +369,8 @@ def cmd():
                                help='List available issue queries')
     issues_parser.add_argument('--list-statuses', action='store_true',
                                help='List available statuses.')
-    issues_parser.add_argument('--delete_relation', help='Delete a relationship',
+    issues_parser.add_argument('--delete_relation',
+                               help='Delete a relationship',
                                type=int, metavar='RELATION_ID')
     # details
     issues_parser.add_argument('--project', help='Filter by or assign to '
@@ -439,15 +444,15 @@ def cmd():
     stderrhandler = logging.StreamHandler()  # Defaults to stderr
     stderrhandler.setLevel(logging.WARNING)
     stderrhandler.setFormatter(formatter)
-    log.addHandler(stdouthandler)
-    log.addHandler(stderrhandler)
+    LOG.addHandler(stdouthandler)
+    LOG.addHandler(stderrhandler)
 
     if args.v:
-        log.setLevel(logging.DEBUG)
+        LOG.setLevel(logging.DEBUG)
     elif args.q:
-        log.setLevel(logging.WARNING)
+        LOG.setLevel(logging.WARNING)
     else:
-        log.setLevel(logging.INFO)
+        LOG.setLevel(logging.INFO)
 
     # load the credentials
     if not args.config:
