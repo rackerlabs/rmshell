@@ -377,8 +377,8 @@ def cmd():
     issues_parser.add_argument('--update', action='store_true',
                                help='Update an existing ticket')
     issues_parser.add_argument('--list-types', action='store_true',
-                               help='List available issue types. Specify a'
-                               'project ID to get specific types for that'
+                               help='List available issue types. Specify a '
+                               'project ID to get specific types for that '
                                'project')
     issues_parser.add_argument('--list-queries', action='store_true',
                                help='List available issue queries')
