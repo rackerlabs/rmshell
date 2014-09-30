@@ -485,6 +485,12 @@ def cmd():
             args.type = cparser.get(args.site, 'default issue tracker')
         except ConfigParser.NoOptionError:
             args.type = 'Bug'
+    
+    if not args.project:
+        try:
+            args.type = cparser.get(args.site, 'default issue project')
+        except ConfigParser.NoOptionError:
+            pass
 
     # Figure out a way to make this a config option in .rore
     rmine = redmine.Redmine(siteurl, key=key, requests={'verify': False})
