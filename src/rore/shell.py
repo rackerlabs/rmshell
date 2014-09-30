@@ -203,9 +203,6 @@ def issues(args, rmine):
             raise RuntimeError('project and subject must be defined')
         idict['project_id'] = args.project
         idict['subject'] = args.subject
-        # Figure out type
-        if not args.type:
-            args.type = 'Bug'
         # Get tracker by type
         itype = [
             tracker.id for tracker in rmine.tracker.all() if
@@ -483,6 +480,11 @@ def cmd():
 
     siteurl = cparser.get(args.site, 'url')
     key = cparser.get(args.site, 'key')
+    if not args.type:
+        try:
+            args.type = cparser.get(args.site, 'default issue tracker')
+        except ConfigParser.NoOptionError:
+            args.type = 'Bug'
 
     # Figure out a way to make this a config option in .rore
     rmine = redmine.Redmine(siteurl, key=key, requests={'verify': False})
