@@ -12,6 +12,8 @@ key=7c6cnotarealkey2b198c24449cca20b61c95854
 The key required is your API key.
 You can find your API key on your account page ( /my/account ) when logged in, on the right-hand pane of the default layout.
 
+The config file should be located at `~/.rore`.
+
 Uses [python-redmine](https://github.com/maxtepkeev/python-redmine)
 
 INSTALLATION
