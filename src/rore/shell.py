@@ -185,6 +185,9 @@ def issues(args, rmine):
         if args.status:
             qdict['status_id'] = args.status
         if args.query_id:
+            if not args.project:
+                raise RuntimeError("query_id argument requires '--project "
+                                   "[projectid]' argument also")
             qdict['query_id'] = args.query_id
         # Get the issues
         ishes = rmine.issue.filter(**qdict)
