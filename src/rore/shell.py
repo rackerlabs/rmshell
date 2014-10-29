@@ -404,7 +404,9 @@ def cmd():
                                'creating a new issue')
     issues_parser.add_argument('--notes', help='Notes to use when resolving '
                                'or closing an issue')
-    issues_parser.add_argument('--query_id', help='Filter by query ID')
+    issues_parser.add_argument('--query_id', help='Filter by query ID. '
+                               ' Requires --project [project] and '
+                               '--query arguments.')
     issues_parser.add_argument('--relate_to', help='Create a relationship',
                                type=int)
     issues_parser.add_argument('--relation_type', help='Type of relationship '
