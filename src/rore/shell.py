@@ -68,6 +68,7 @@ def print_issue(rmine, issue, verbose=False, oneline=False):
         print('assigned to: UNASSIGNED')
     print('project:     %s' % issue.project.name)
     print('status:      %s' % issue.status.name)
+    print('priority:    %s' % issue.priority.name)
     print('completion:  %s' % issue.done_ratio)
     if verbose:
         # Here is where we should enumerate all the possible fields
@@ -143,6 +144,7 @@ def print_project(rmine, proj, verbose=False):
             pass
     print('\n')
 
+
 def editor_text(initial_description=""):
     EDITOR = os.environ.get('EDITOR')
     with tempfile.NamedTemporaryFile(suffix=".tmp", delete=False,
@@ -155,12 +157,23 @@ def editor_text(initial_description=""):
     os.remove(tmp.name)
     return text
 
+
 def create_relation(rmine, issue, relissue, reltype):
     """Creates a new issue relationship between two issues."""
 
     rmine.issue_relation.create(issue_id=issue,
                                 issue_to_id=relissue,
                                 relation_type=reltype)
+
+
+def get_priority(rmine, priority):
+    """Gets the id for the priority passed in."""
+
+    priorities = rmine.enumeration.filter(resource='issue_priorities')
+    p = [p for p in priorities if p.name.lower() == priority.lower()]
+    if len(p) == 0:
+        raise RuntimeError("Priority '%s' is not a priority.")
+    return p[0]
 
 
 def issues(args, rmine):
@@ -188,6 +201,10 @@ def issues(args, rmine):
             qdict['query_id'] = args.query_id
         # Get the issues
         ishes = rmine.issue.filter(**qdict)
+        if args.priority:
+            priority = get_priority(rmine, args.priority)
+            ishes = [i for i in ishes
+                     if i.priority.name.lower() == priority.name.lower()]
         # This output is kinda lame, but functional for now
         for issue in ishes:
             print_issue(rmine, issue, args.verbose, args.oneline)
@@ -226,6 +243,10 @@ def issues(args, rmine):
                 idict['status_id'] = stat[0].id
             except IndexError:
                 raise RuntimeError('Unknown issue type %s' % args.type)
+        # set priority
+        if args.priority:
+            p = get_priority(rmine, args.priority)
+            idict['priority_id'] = p.id
         # Create the issue
         issue = rmine.issue.create(**idict)
         # Create a relationship if one was asked for
@@ -267,6 +288,8 @@ def issues(args, rmine):
             udict['subject'] = args.subject
         if args.description:
             udict['description'] = args.description
+        if args.priority:
+            udict['priority_id'] = get_priority(rmine, args.priority).id
         if args.notes:
             udict['notes'] = args.notes
 
@@ -395,6 +418,8 @@ def cmd():
     # Need a way to filter all assigned issues, just show unassigned
     issues_parser.add_argument('--assigned_to', help='Filter by or assign to '
                                'user. Defaults to UNASSIGNED when creating.')
+    issues_parser.add_argument('--priority', help='Filter by or create '
+                               'priority. Defaults to Normal')
     issues_parser.add_argument('--status',
                                help='Only deal with issues with this status '
                                'or set an issue to this status.')
@@ -476,9 +501,8 @@ def cmd():
     try:
         cparser.readfp(open(configfile, 'r'))
     except IOError:
-        log.error("Couldn't find config file: %s" % configfile)
+        LOG.error("Couldn't find config file: %s" % configfile)
         exit(1)
-
 
     siteurl = cparser.get(args.site, 'url')
     key = cparser.get(args.site, 'key')
@@ -487,7 +511,7 @@ def cmd():
             args.type = cparser.get(args.site, 'default issue tracker')
         except ConfigParser.NoOptionError:
             args.type = 'Bug'
-    
+
     if not args.project:
         try:
             args.type = cparser.get(args.site, 'default issue project')
