@@ -147,14 +147,16 @@ def print_project(rmine, proj, verbose=False):
 
 def editor_text(initial_description=""):
     EDITOR = os.environ.get('EDITOR')
-    with tempfile.NamedTemporaryFile(suffix=".tmp", delete=False,
-                                     dir='/tmp/') as tmp:
-        tmp.write(initial_description)
-        tmp.flush()
-        call([EDITOR, tmp.name])
-    with open(tmp.name, 'r') as fh:
-        text = fh.read()
-    os.remove(tmp.name)
+    text = initial_description
+    if EDITOR:
+        with tempfile.NamedTemporaryFile(suffix=".tmp", delete=False,
+                                         dir='/tmp/') as tmp:
+            tmp.write(initial_description)
+            tmp.flush()
+            call([EDITOR, tmp.name])
+        with open(tmp.name, 'r') as fh:
+            text = fh.read()
+        os.remove(tmp.name)
     return text
 
 
