@@ -511,6 +511,11 @@ def cmd():
 
     siteurl = cparser.get(args.site, 'url')
     key = cparser.get(args.site, 'key')
+    try:
+        verify = cparser.getboolean(args.site, 'verify')
+    except ConfigParser.NoOptionError:
+        verify = False
+
     if not args.type:
         try:
             args.type = cparser.get(args.site, 'default issue tracker')
@@ -524,7 +529,7 @@ def cmd():
             pass
 
     # Figure out a way to make this a config option in .rore
-    rmine = redmine.Redmine(siteurl, key=key, requests={'verify': False})
+    rmine = redmine.Redmine(siteurl, key=key, requests={'verify': verify})
 
     # Run the required command -- pass args into it for reference
     args.command(args, rmine)
