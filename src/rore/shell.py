@@ -197,6 +197,9 @@ def issues(args, rmine):
             qdict['subproject_id'] = '!*'
         if args.assigned_to:
             qdict['assigned_to_id'] = get_user(rmine, args.assigned_to)
+        if args.mine:
+            my_id = rmine.user.get('current').id
+            qdict['assigned_to_id'] = my_id
         if args.status:
             qdict['status_id'] = args.status
         if args.query_id:
@@ -420,9 +423,11 @@ def cmd():
     # I don't like the asterisk here, change it to something else soon
     issues_parser.add_argument('--nosubs', help='Filter out issues from sub '
                                'projects', action='store_true')
+    group = issues_parser.add_mutually_exclusive_group()
     # Need a way to filter all assigned issues, just show unassigned
-    issues_parser.add_argument('--assigned_to', help='Filter by or assign to '
-                               'user. Defaults to UNASSIGNED when creating.')
+    group.add_argument('--assigned_to', help='Filter by or assign to '
+                       'user. Defaults to UNASSIGNED when creating.')
+    group.add_argument('--mine', action='store_true', help='Only your issues')
     issues_parser.add_argument('--priority', help='Filter by or create '
                                'priority. Defaults to Normal')
     issues_parser.add_argument('--status',
