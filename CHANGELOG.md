@@ -1,6 +1,13 @@
 Rore Changes By Release
 ==========================
 
+## 0.7 - December 2, 2014
+
+- Mine argument allows user to see their own tickets
+- Move cert verification to config option
+- Add ability to filter by priority
+- Error notification if query_id argument passed without project argument
+
 ## 0.6 - March 25, 2014
 
 - Issue relation deletion
