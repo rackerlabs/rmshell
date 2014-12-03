@@ -178,6 +178,26 @@ def get_priority(rmine, priority):
     return p[0]
 
 
+def print_user(user):
+    print('\n')
+    print("###################")
+    print("Id: %s" % user.id)
+    print("Name: %s %s" % (user.firstname, user.lastname))
+    print("Email: %s" % user.mail)
+    print("###################")
+    print('\n')
+
+
+def users(args, rmine):
+    """Handle users"""
+    if not args.me:
+        print("Currently only argument available for users is --me")
+        print("Going to assume you want to see your information")
+
+    my_user = rmine.user.get('current')
+    print_user(my_user)
+
+
 def issues(args, rmine):
     """Handle issues"""
 
@@ -463,6 +483,14 @@ def cmd():
     # assign the function
     issues_parser.set_defaults(command=issues)
 
+    # Users
+    user_parser = subparsers.add_parser('users',
+                                        help='Interact with users')
+    user_parser.add_argument('--me', action='store_true',
+                             help='Get your user information')
+    # assign the function
+    user_parser.set_defaults(command=users)
+
     # Projects
     project_parser = subparsers.add_parser('projects',
                                            help='Interact with projects')
@@ -521,17 +549,18 @@ def cmd():
     except ConfigParser.NoOptionError:
         verify = False
 
-    if not args.type:
-        try:
-            args.type = cparser.get(args.site, 'default issue tracker')
-        except ConfigParser.NoOptionError:
-            args.type = 'Bug'
+    if args.command == issues:
+        if not args.type:
+            try:
+                args.type = cparser.get(args.site, 'default issue tracker')
+            except ConfigParser.NoOptionError:
+                args.type = 'Bug'
 
-    if not args.project:
-        try:
-            args.type = cparser.get(args.site, 'default issue project')
-        except ConfigParser.NoOptionError:
-            pass
+        if not args.project:
+            try:
+                args.type = cparser.get(args.site, 'default issue project')
+            except ConfigParser.NoOptionError:
+                pass
 
     # Figure out a way to make this a config option in .rore
     rmine = redmine.Redmine(siteurl, key=key, requests={'verify': verify})
