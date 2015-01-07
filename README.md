@@ -3,8 +3,8 @@ rore
 
 Build Status
 ====================
-.. image:: https://travis-ci.org/rackerlabs/rore.svg?branch=master
-    :target: https://travis-ci.org/rackerlabs/rore
+
+[![Build Status](https://travis-ci.org/rackerlabs/rore.svg?branch=master)](http://travis-ci.org/rackerlabs/rore)
 
 A command line tool for working with Redmine
 
