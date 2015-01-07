@@ -1,10 +1,10 @@
-rore
-=======
-
 Build Status
-====================
+============
 
 [![Build Status](https://travis-ci.org/rackerlabs/rore.svg?branch=master)](http://travis-ci.org/rackerlabs/rore)
+
+rore
+=======
 
 A command line tool for working with Redmine
 
