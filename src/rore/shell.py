@@ -389,9 +389,7 @@ def projects(args, rmine):
         return
 
 
-def cmd():
-    """This is the entry point for the shell command"""
-
+def create_parser():
     parser = argparse.ArgumentParser(prog='rore')
     # config
     parser.add_argument('--config', '-C', default=None,
@@ -505,9 +503,10 @@ def cmd():
     # assign the function
     project_parser.set_defaults(command=projects)
 
-    args = parser.parse_args()
-    # Setup logging
+    return parser
 
+
+def setup_logging(args):
     class StdoutFilter(logging.Filter):
         def filter(self, record):
             # If the record is 20 (INFO) or lower, let it through
@@ -531,6 +530,8 @@ def cmd():
     else:
         LOG.setLevel(logging.INFO)
 
+
+def load_config(args):
     # load the credentials
     if not args.config:
         args.config = '~/.rore'
@@ -561,9 +562,22 @@ def cmd():
                 args.type = cparser.get(args.site, 'default issue project')
             except ConfigParser.NoOptionError:
                 pass
+    return siteurl, key, verify
 
+
+def connect_to_redmine(siteurl, key, verify):
     # Figure out a way to make this a config option in .rore
     rmine = redmine.Redmine(siteurl, key=key, requests={'verify': verify})
+    return rmine
+
+
+def cmd():
+    """This is the entry point for the shell command"""
+    parser = create_parser()
+    args = parser.parse_args()
+    setup_logging(args)
+    config_keys = load_config(args)
+    rmine = connect_to_redmine(*config_keys)
 
     # Run the required command -- pass args into it for reference
     args.command(args, rmine)

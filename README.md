@@ -1,6 +1,11 @@
 rore
 =======
 
+Build Status
+====================
+.. image:: https://travis-ci.org/rackerlabs/rore.svg?branch=master
+    :target: https://travis-ci.org/rackerlabs/rore
+
 A command line tool for working with Redmine
 
 Requires a config file like:
@@ -55,6 +60,14 @@ $ rore --help
 $ rore issues --help
 ```
 
+TESTING
+=======
+
+```
+tox -r
+```
+
+
 CONTRIBUTING
 ============
 
@@ -62,4 +75,10 @@ License is Apache 2.0.
 
 Pull requests welcome.
 
-Find me in #rackspace-dev on Freenode as jlk
+Find me in #rackspace-dev on Freenode as jmeridth
+
+CREATED BY
+============
+Jesse Keating
+@iamjkeating
+jlk on freenode/irc
